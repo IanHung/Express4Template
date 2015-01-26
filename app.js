@@ -16,8 +16,16 @@ var shrinkroute = require('shrinkroute');
 var urlpatterns = require('./urlpatterns');
 
 
+//load config file
+var config = require('./config')();
+
 //create express app
 var app = express();
+
+//variables set up
+app.set('STATIC_PATH', config.STATIC_PATH);
+
+app.set('port', config.port);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,6 +34,10 @@ var nunjucksEnv = nunjucks.configure(app.get('views'), {
 	autoescape: false, 
 	express: app
 });
+//helper for view engine
+app.locals.staticURL = function(str){
+    return app.get('STATIC_PATH') + str;
+};
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -33,8 +45,9 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
+//app.use(express.static(path.join(__dirname, 'public')));
+//allows custom path for static content
+app.use(app.get('STATIC_PATH'),express.static(path.join(__dirname, 'public')));
 
 var shrinkr = shrinkroute( app, urlpatterns({}) );
 // catch 404 and forward to error handler
