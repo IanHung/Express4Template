@@ -13,7 +13,7 @@ var nunjucks = require('nunjucks');
 
 //url management
 var shrinkroute = require('shrinkroute');
-var urlpatterns = require('./urlpatterns');
+var urlpatterns = require('./urlPatterns');
 
 
 //load config file
